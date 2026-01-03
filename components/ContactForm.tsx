@@ -63,7 +63,7 @@ export const ContactForm: React.FC = () => {
       console.error("Submission Error:", error);
       // For local development or if ID is missing, we simulate success for the demo
       // but log the data that would have been sent.
-      console.log("Form data would have been sent to arifaqeelahmad382@gmail.com:", finalData);
+      console.log("Form data would have been sent:", finalData);
       await new Promise(resolve => setTimeout(resolve, 2000));
       setStatus('success'); 
     }

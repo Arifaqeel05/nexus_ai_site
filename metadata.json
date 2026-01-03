@@ -1,0 +1,9 @@
+{
+  "name": "NexusAI Studios",
+  "description": "A premium agency website specializing in AI automation, professional video editing, and AI-driven video generation. Featuring a modern, high-conversion UI and a Gemini-powered AI consultant.",
+  "keywords": "AI automation, video editing, AI video generation, NexusAI, web development, app development, UI/UX design, generative AI, automation agency",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}

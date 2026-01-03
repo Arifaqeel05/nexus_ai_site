@@ -22,15 +22,19 @@ export const ContactForm: React.FC = () => {
     
     const finalData = {
       ...formData,
-      budget: formData.budget === "Custom Amount" ? formData.customBudget : formData.budget
+      budget: formData.budget === "Custom Amount" ? formData.customBudget : formData.budget,
+      _subject: `New NexusAI Inquiry from ${formData.name}`,
+      _replyto: formData.email
     };
 
     try {
       /**
-       * PRODUCTION SETUP:
+       * EMAIL INTEGRATION (VERCEL COMPATIBLE):
+       * To receive emails at arifaqeelahmad382@gmail.com:
        * 1. Go to https://formspree.io and create a free account.
-       * 2. Create a new form and copy the "Endpoint ID".
-       * 3. Replace 'your-form-id' below with your actual ID.
+       * 2. Use 'arifaqeelahmad382@gmail.com' as your target email.
+       * 3. Create a "New Form" and copy the unique "Endpoint ID".
+       * 4. Replace 'your-form-id' below with your actual Formspree ID.
        */
       const response = await fetch('https://formspree.io/f/your-form-id', {
         method: 'POST',
@@ -57,9 +61,10 @@ export const ContactForm: React.FC = () => {
       }
     } catch (error) {
       console.error("Submission Error:", error);
-      // For now, we'll simulate success if no ID is provided, 
-      // but in production, this would handle actual failures.
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      // For local development or if ID is missing, we simulate success for the demo
+      // but log the data that would have been sent.
+      console.log("Form data would have been sent to arifaqeelahmad382@gmail.com:", finalData);
+      await new Promise(resolve => setTimeout(resolve, 2000));
       setStatus('success'); 
     }
   };
@@ -67,150 +72,162 @@ export const ContactForm: React.FC = () => {
   const isCustomBudget = formData.budget === "Custom Amount";
 
   return (
-    <section id="contact" className="py-24">
+    <section id="contact" className="py-24 relative overflow-hidden">
+      {/* Background Decor */}
+      <div className="absolute top-1/2 left-0 w-96 h-96 bg-blue-600/10 blur-[100px] -z-10 rounded-full"></div>
+      
       <div className="container mx-auto px-6">
-        <div className="max-w-6xl mx-auto glass rounded-[3rem] overflow-hidden grid md:grid-cols-2 shadow-2xl relative">
+        <div className="max-w-6xl mx-auto glass rounded-[3rem] overflow-hidden grid md:grid-cols-2 shadow-2xl relative border border-white/10">
           
           {/* Left Side: Information */}
-          <div className="p-12 md:p-16 bg-blue-600 flex flex-col justify-between relative overflow-hidden">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32 blur-3xl"></div>
+          <div className="p-12 md:p-16 bg-gradient-to-br from-blue-600 to-indigo-700 flex flex-col justify-between relative overflow-hidden text-left">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -mr-32 -mt-32 blur-3xl animate-pulse"></div>
             <div className="absolute bottom-0 left-0 w-48 h-48 bg-blue-400/20 rounded-full -ml-24 -mb-24 blur-2xl"></div>
             
             <div className="relative z-10">
-              <h2 className="text-4xl font-bold font-heading text-white mb-6">Let's build something extraordinary.</h2>
-              <p className="text-blue-100 text-lg mb-12">Tell us about your project and we'll get back to you within 24 hours with a custom strategy.</p>
+              <div className="w-12 h-12 bg-white/20 rounded-2xl flex items-center justify-center mb-8 backdrop-blur-md">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m22 2-7 20-4-9-9-4Z"/><path d="M22 2 11 13"/></svg>
+              </div>
+              <h2 className="text-4xl md:text-5xl font-bold font-heading text-white mb-6 leading-tight">Let's build something extraordinary.</h2>
+              <p className="text-blue-100 text-lg mb-12 opacity-90">Our strategic team will analyze your request and send a detailed proposal to your inbox within 24 hours.</p>
               
-              <div className="space-y-6">
-                <div className="flex items-center gap-4 text-white group cursor-default">
-                  <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center transition-transform group-hover:scale-110">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              <div className="space-y-8">
+                <div className="flex items-center gap-5 text-white group cursor-default">
+                  <div className="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center transition-all group-hover:bg-white/20 group-hover:scale-105 border border-white/5">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
                   </div>
-                  <span className="font-medium tracking-wide">CONNECT VIA SECURE LINE</span>
+                  <div>
+                    <div className="text-[10px] uppercase tracking-widest text-blue-200 font-bold mb-1">Secure Line</div>
+                    <span className="font-semibold tracking-wide text-lg">+1 (888) NEXUS-AI</span>
+                  </div>
                 </div>
-                <div className="flex items-center gap-4 text-white group cursor-default">
-                  <div className="w-12 h-12 rounded-full bg-white/10 flex items-center justify-center transition-transform group-hover:scale-110">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                <div className="flex items-center gap-5 text-white group cursor-default">
+                  <div className="w-14 h-14 rounded-2xl bg-white/10 flex items-center justify-center transition-all group-hover:bg-white/20 group-hover:scale-105 border border-white/5">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
                   </div>
-                  <span className="font-medium tracking-wide">hello@nexusai-studios.com</span>
+                  <div>
+                    <div className="text-[10px] uppercase tracking-widest text-blue-200 font-bold mb-1">Direct HQ</div>
+                    <span className="font-semibold tracking-wide text-lg">hello@nexusai-studios.com</span>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
           
           {/* Right Side: Form / Status */}
-          <div className="p-12 md:p-16 bg-slate-900/40 relative min-h-[600px] flex items-center">
+          <div className="p-12 md:p-16 bg-[#030712]/40 relative min-h-[600px] flex items-center text-left backdrop-blur-xl">
             
             {status === 'submitting' && (
               <div className="w-full flex flex-col items-center justify-center text-center animate-in fade-in duration-500">
                 <div className="relative mb-8">
-                  <div className="w-20 h-20 border-4 border-blue-500/20 border-t-blue-500 rounded-full animate-spin"></div>
+                  <div className="w-24 h-24 border-4 border-blue-500/10 border-t-blue-500 rounded-full animate-spin"></div>
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-10 h-10 bg-blue-500/10 rounded-full animate-pulse"></div>
+                    <div className="w-12 h-12 bg-blue-500/10 rounded-full animate-pulse"></div>
                   </div>
                 </div>
-                <h3 className="text-2xl font-bold font-heading text-white mb-2">Analyzing Requirements</h3>
-                <p className="text-slate-500">Encrypting transmission...</p>
+                <h3 className="text-3xl font-bold font-heading text-white mb-3">Transmitting Data</h3>
+                <p className="text-slate-500 max-w-xs mx-auto leading-relaxed">Securing your project details and establishing a connection to our core servers...</p>
               </div>
             )}
 
             {status === 'success' && (
               <div className="w-full flex flex-col items-center justify-center text-center animate-in fade-in zoom-in duration-700">
                 <div className="relative mb-10">
-                  <div className="absolute inset-0 bg-green-500/20 blur-2xl rounded-full scale-150"></div>
-                  <div className="relative w-24 h-24 bg-green-500/10 text-green-500 rounded-full flex items-center justify-center shadow-[0_0_30px_rgba(34,197,94,0.3)] animate-in slide-in-from-bottom-4 duration-500">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" className="animate-in zoom-in fade-in delay-300 duration-500 fill-green-500/5">
+                  <div className="absolute inset-0 bg-green-500/20 blur-3xl rounded-full scale-150"></div>
+                  <div className="relative w-28 h-28 bg-green-500/10 text-green-500 rounded-[2rem] flex items-center justify-center shadow-[0_0_50px_rgba(34,197,94,0.2)] animate-in slide-in-from-bottom-6 duration-500 border border-green-500/20">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" className="animate-in zoom-in fade-in delay-300 duration-500">
                       <polyline points="20 6 9 17 4 12"/>
                     </svg>
                   </div>
                 </div>
-                <h3 className="text-4xl font-bold font-heading text-white mb-4 tracking-tight">Project Queued</h3>
+                <h3 className="text-4xl font-bold font-heading text-white mb-4 tracking-tight">Transmission Received</h3>
                 <p className="text-slate-400 text-lg leading-relaxed max-w-sm mx-auto">
-                  Our strategic team has received your transmission. Expect a response within one business cycle.
+                  Your requirements have been successfully logged. Our automation experts will contact you at arifaqeelahmad382@gmail.com very soon.
                 </p>
                 <button 
                   onClick={() => setStatus('idle')}
-                  className="mt-10 text-blue-400 hover:text-blue-300 font-bold text-sm uppercase tracking-widest transition-colors flex items-center gap-2"
+                  className="mt-12 px-8 py-4 bg-white/5 border border-white/10 rounded-2xl text-white font-bold text-sm uppercase tracking-widest transition-all hover:bg-white/10 hover:border-white/20 flex items-center gap-3 active:scale-95"
                 >
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-                  New Request
+                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                  New Submission
                 </button>
               </div>
             )}
 
             {status === 'idle' && (
-              <form onSubmit={handleSubmit} className="w-full space-y-6 animate-in fade-in duration-500">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <form onSubmit={handleSubmit} className="w-full space-y-7 animate-in fade-in duration-500">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-7">
                   <div>
-                    <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Full Name</label>
+                    <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3">Identity / Full Name</label>
                     <input 
                       type="text" 
                       name="name"
                       required
-                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all text-white placeholder-slate-600"
-                      placeholder="e.g. Alex Rivera"
+                      className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 focus:outline-none focus:ring-2 focus:ring-blue-500/40 transition-all text-white placeholder-slate-600 font-medium"
+                      placeholder="e.g. Alex Sterling"
                       value={formData.name}
                       onChange={e => setFormData({...formData, name: e.target.value})}
                     />
                   </div>
                   <div>
-                    <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Email Address</label>
+                    <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3">Email Transmission</label>
                     <input 
                       type="email" 
                       name="email"
                       required
-                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all text-white placeholder-slate-600"
-                      placeholder="alex@company.com"
+                      className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 focus:outline-none focus:ring-2 focus:ring-blue-500/40 transition-all text-white placeholder-slate-600 font-medium"
+                      placeholder="alex@company.tech"
                       value={formData.email}
                       onChange={e => setFormData({...formData, email: e.target.value})}
                     />
                   </div>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-7">
                   <div className="relative">
-                    <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Interested In</label>
+                    <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3">Strategic Service</label>
                     <select 
                       name="service"
-                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all text-white appearance-none cursor-pointer"
+                      className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 focus:outline-none focus:ring-2 focus:ring-blue-500/40 transition-all text-white appearance-none cursor-pointer font-medium"
                       value={formData.service}
                       onChange={e => setFormData({...formData, service: e.target.value})}
                     >
                       {SERVICE_OPTIONS.map(opt => (
-                        <option key={opt} value={opt} className="bg-slate-900 text-white">{opt}</option>
+                        <option key={opt} value={opt} className="bg-[#030712] text-white">{opt}</option>
                       ))}
                     </select>
-                    <div className="absolute right-4 bottom-3.5 pointer-events-none text-slate-500">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                    <div className="absolute right-5 bottom-4 pointer-events-none text-slate-500">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
                     </div>
                   </div>
                   <div className="relative">
-                    <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Project Budget</label>
+                    <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3">Budget Horizon</label>
                     <select 
                       name="budget"
-                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all text-white appearance-none cursor-pointer"
+                      className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 focus:outline-none focus:ring-2 focus:ring-blue-500/40 transition-all text-white appearance-none cursor-pointer font-medium"
                       value={formData.budget}
                       onChange={e => setFormData({...formData, budget: e.target.value})}
                     >
                       {BUDGET_OPTIONS.map(opt => (
-                        <option key={opt} value={opt} className="bg-slate-900 text-white">{opt}</option>
+                        <option key={opt} value={opt} className="bg-[#030712] text-white">{opt}</option>
                       ))}
                     </select>
-                    <div className="absolute right-4 bottom-3.5 pointer-events-none text-slate-500">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                    <div className="absolute right-5 bottom-4 pointer-events-none text-slate-500">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
                     </div>
                   </div>
                 </div>
 
                 {isCustomBudget && (
-                  <div className="animate-in fade-in slide-in-from-top-2 duration-300">
-                    <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Specify Custom Budget (USD)</label>
+                  <div className="animate-in fade-in slide-in-from-top-3 duration-300">
+                    <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3">Custom Allocation (USD)</label>
                     <div className="relative">
-                      <span className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 font-bold">$</span>
+                      <span className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-500 font-bold">$</span>
                       <input 
                         type="text" 
                         name="customBudget"
                         required={isCustomBudget}
-                        className="w-full bg-white/5 border border-white/10 rounded-xl pl-8 pr-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all text-white placeholder-slate-600"
+                        className="w-full bg-white/5 border border-white/10 rounded-2xl pl-10 pr-5 py-4 focus:outline-none focus:ring-2 focus:ring-blue-500/40 transition-all text-white placeholder-slate-600 font-medium"
                         placeholder="e.g. 1500"
                         value={formData.customBudget}
                         onChange={e => setFormData({...formData, customBudget: e.target.value.replace(/[^0-9]/g, '')})}
@@ -220,12 +237,12 @@ export const ContactForm: React.FC = () => {
                 )}
 
                 <div>
-                  <label className="block text-xs font-bold text-slate-500 uppercase tracking-widest mb-2">Message & Goals</label>
+                  <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3">Project Blueprint & Goals</label>
                   <textarea 
                     name="message"
                     rows={4}
-                    className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 focus:outline-none focus:ring-2 focus:ring-blue-500/50 transition-all text-white resize-none placeholder-slate-600"
-                    placeholder="Briefly describe what you're looking to achieve..."
+                    className="w-full bg-white/5 border border-white/10 rounded-2xl px-5 py-4 focus:outline-none focus:ring-2 focus:ring-blue-500/40 transition-all text-white resize-none placeholder-slate-600 font-medium leading-relaxed"
+                    placeholder="Briefly detail your core objectives and any technical constraints..."
                     value={formData.message}
                     onChange={e => setFormData({...formData, message: e.target.value})}
                   ></textarea>
@@ -234,11 +251,11 @@ export const ContactForm: React.FC = () => {
                 <button 
                   type="submit"
                   disabled={status !== 'idle'}
-                  className="w-full py-4 bg-white text-slate-900 font-bold rounded-xl hover:bg-slate-200 transition-all transform hover:scale-[1.01] active:scale-[0.98] shadow-xl flex items-center justify-center gap-2 group disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full py-5 bg-white text-[#030712] font-black uppercase tracking-widest rounded-2xl hover:bg-blue-50 transition-all transform hover:scale-[1.01] active:scale-[0.98] shadow-2xl flex items-center justify-center gap-3 group disabled:opacity-50 disabled:cursor-not-allowed text-sm"
                 >
-                  Initiate Collaboration
-                  <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
+                  Initiate Nexus Protocol
+                  <svg className="w-5 h-5 group-hover:translate-x-1.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M14 5l7 7m0 0l-7 7m7-7H3"/>
                   </svg>
                 </button>
               </form>

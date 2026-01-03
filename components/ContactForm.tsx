@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { SERVICE_OPTIONS, BUDGET_OPTIONS } from '../types';
 
@@ -20,32 +19,34 @@ export const ContactForm: React.FC = () => {
     e.preventDefault();
     setStatus('submitting');
     
-    const finalData = {
-      ...formData,
+    // We use FormSubmit.co for easy setup
+    const CONTACT_EMAIL = 'arifaqeelahmad382@gmail.com';
+
+    const payload = {
+      name: formData.name,
+      email: formData.email,
+      company: formData.company || 'Not Specified',
+      service: formData.service,
       budget: formData.budget === "Custom Amount" ? formData.customBudget : formData.budget,
-      _subject: `New NexusAI Inquiry from ${formData.name}`,
-      _replyto: formData.email
+      message: formData.message,
+      _subject: `🚀 New Project Inquiry: ${formData.name}`,
+      _template: 'table', // Professional email layout
+      _captcha: 'false'   // Set to true in production if you get spam
     };
 
     try {
-      /**
-       * EMAIL INTEGRATION (VERCEL COMPATIBLE):
-       * To receive emails at arifaqeelahmad382@gmail.com:
-       * 1. Go to https://formspree.io and create a free account.
-       * 2. Use 'arifaqeelahmad382@gmail.com' as your target email.
-       * 3. Create a "New Form" and copy the unique "Endpoint ID".
-       * 4. Replace 'your-form-id' below with your actual Formspree ID.
-       */
-      const response = await fetch('https://formspree.io/f/your-form-id', {
+      const response = await fetch(`https://formsubmit.co/ajax/${CONTACT_EMAIL}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Accept': 'application/json'
         },
-        body: JSON.stringify(finalData)
+        body: JSON.stringify(payload)
       });
 
-      if (response.ok) {
+      const result = await response.json();
+
+      if (response.ok && result.success === "true") {
         setStatus('success');
         setFormData({
           name: '',
@@ -61,11 +62,9 @@ export const ContactForm: React.FC = () => {
       }
     } catch (error) {
       console.error("Submission Error:", error);
-      // For local development or if ID is missing, we simulate success for the demo
-      // but log the data that would have been sent.
-      console.log("Form data would have been sent to arifaqeelahmad382@gmail.com:", finalData);
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      setStatus('success'); 
+      setStatus('error');
+      // If it fails, we show error for 5 seconds then go back to idle
+      setTimeout(() => setStatus('idle'), 5000);
     }
   };
 
@@ -130,6 +129,17 @@ export const ContactForm: React.FC = () => {
               </div>
             )}
 
+            {status === 'error' && (
+              <div className="w-full flex flex-col items-center justify-center text-center animate-in shake duration-500">
+                <div className="w-20 h-20 bg-red-500/10 text-red-500 rounded-full flex items-center justify-center mb-6 border border-red-500/20">
+                   <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>
+                </div>
+                <h3 className="text-2xl font-bold text-white mb-2">Transmission Failed</h3>
+                <p className="text-slate-500 mb-6">There was a server error. Please ensure you confirmed the FormSubmit activation email.</p>
+                <button onClick={() => setStatus('idle')} className="text-blue-500 font-bold uppercase tracking-widest text-xs hover:text-blue-400 transition-colors">Try Again</button>
+              </div>
+            )}
+
             {status === 'success' && (
               <div className="w-full flex flex-col items-center justify-center text-center animate-in fade-in zoom-in duration-700">
                 <div className="relative mb-10">
@@ -142,7 +152,7 @@ export const ContactForm: React.FC = () => {
                 </div>
                 <h3 className="text-4xl font-bold font-heading text-white mb-4 tracking-tight">Transmission Received</h3>
                 <p className="text-slate-400 text-lg leading-relaxed max-w-sm mx-auto">
-                  Your requirements have been successfully logged. Our  experts will contact you very soon.
+                  Your requirements have been successfully logged. Our experts will contact you at <strong>arifaqeelahmad382@gmail.com</strong> very soon.
                 </p>
                 <button 
                   onClick={() => setStatus('idle')}

@@ -63,7 +63,7 @@ export const ContactForm: React.FC = () => {
       console.error("Submission Error:", error);
       // For local development or if ID is missing, we simulate success for the demo
       // but log the data that would have been sent.
-      console.log("Form data would have been sent:", finalData);
+      console.log("Form data would have been sent to arifaqeelahmad382@gmail.com:", finalData);
       await new Promise(resolve => setTimeout(resolve, 2000));
       setStatus('success'); 
     }
@@ -98,7 +98,7 @@ export const ContactForm: React.FC = () => {
                   </div>
                   <div>
                     <div className="text-[10px] uppercase tracking-widest text-blue-200 font-bold mb-1">Secure Line</div>
-                    <span className="font-semibold tracking-wide text-lg">+1 (888) NEXUS-AI</span>
+                    <span className="font-semibold tracking-wide text-lg">+92-3347633480</span>
                   </div>
                 </div>
                 <div className="flex items-center gap-5 text-white group cursor-default">
@@ -142,7 +142,7 @@ export const ContactForm: React.FC = () => {
                 </div>
                 <h3 className="text-4xl font-bold font-heading text-white mb-4 tracking-tight">Transmission Received</h3>
                 <p className="text-slate-400 text-lg leading-relaxed max-w-sm mx-auto">
-                  Your requirements have been successfully logged. Our automation experts will contact you at arifaqeelahmad382@gmail.com very soon.
+                  Your requirements have been successfully logged. Our  experts will contact you very soon.
                 </p>
                 <button 
                   onClick={() => setStatus('idle')}
